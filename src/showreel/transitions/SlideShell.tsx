@@ -97,10 +97,11 @@ export const SlideShell: React.FC<{
   );
 
   return (
-    <AbsoluteFill style={{ backgroundColor: bg, opacity: fadesWholeSlide ? exitOpacity : 1 }}>
+    // the whole slide (background included) fades in for crossfade / blurDissolve so the previous slide shows through
+    <AbsoluteFill style={{ backgroundColor: bg, opacity: enterOpacity * (fadesWholeSlide ? exitOpacity : 1) }}>
       <AbsoluteFill
         style={{
-          opacity: enterOpacity * (fadesWholeSlide ? 1 : exitOpacity),
+          opacity: fadesWholeSlide ? 1 : exitOpacity,
           filter: totalBlur > 0.2 ? `blur(${totalBlur}px)` : undefined,
         }}
       >

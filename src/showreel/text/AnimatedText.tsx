@@ -35,8 +35,11 @@ export const AnimatedText: React.FC<{
   const body = text.endsWith('.') ? text.slice(0, -1) : text;
   const hasPeriod = text.endsWith('.');
   const words = body.split(' ');
+  // trackIn shows the period early and lets it slide in with the tracking (reference S1);
+  // the stagger effects bring it in after the last word
+  const periodAt = effect === 'trackIn' ? t.wordStagger : (words.length - 1) * t.wordStagger * 2 + t.wordFade * 2;
   const periodSpan = hasPeriod ? (
-    <span style={{ opacity: ramp(f, t.wordStagger, t.wordStagger + t.wordFade), color: periodColor }}>.</span>
+    <span style={{ opacity: ramp(f, periodAt, periodAt + t.wordFade), color: periodColor }}>.</span>
   ) : null;
 
   // ---- trackIn (the reference device) ----
