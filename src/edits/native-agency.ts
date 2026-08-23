@@ -1,0 +1,127 @@
+import type { EditManifest } from '../showreel/manifest';
+import { resolveFont } from '../showreel/fonts';
+import { HeadlineCardChrome } from './native-agency.custom';
+
+// native.agency brand reveal, built 2026-08-23 from 8 stills in ~/Desktop/native-test/first versions.
+// Timings mirror the Omni Lab reference rhythm (see showreel skill, references/brand-reveal-omni-lab/SPEC.md).
+const A = 'edits/native-agency';
+const INK = '#1a1a1a';
+const DIM = '#85857f';
+
+export const nativeAgency: EditManifest = {
+  id: 'native-agency',
+  client: 'native.agency',
+  fps: 30,
+  width: 1920,
+  height: 1080,
+  brand: {
+    bg: '#ffffff',
+    bgDark: INK,
+    ink: INK,
+    inkOnDark: '#ffffff',
+    dim: DIM,
+    pending: '#c9c8c3',
+    border: '#d9d9d9',
+    fonts: { title: 'Manrope', body: 'Inter', mono: 'GeistMono' },
+  },
+  preset: { extends: 'editorial', transition: { flash: 3 }, blur: { maxPx: 14, gain: 60 } },
+  slides: [
+    { id: 'title', device: 'title', text: 'A new look.', hold: 34, camera: false },
+    {
+      id: 'lockup',
+      device: 'lockup',
+      dark: true,
+      hold: 57,
+      src: `${A}/01.png`,
+      slices: [[436, 581], [650, 800], [809, 1103], [1120, 1156], [1167, 1335], [1346, 1468]],
+      top: 472,
+      bottom: 606,
+      camera: { push: 1.06, startAt: 12 },
+    },
+    { id: 'mark-dark', device: 'kenBurns', dark: true, hold: 41, src: `${A}/02.png`, camera: { push: 1.25, startAt: 0 } },
+    { id: 'mark-light', device: 'kenBurns', hold: 34, in: { kind: 'flash' }, src: `${A}/1441.png`, from: 1.03, settle: 8, camera: { push: 1.05, startAt: 8 } },
+    {
+      id: 'headline',
+      device: 'typed',
+      hold: 70,
+      tokens: [
+        { text: 'The', color: DIM },
+        { text: 'web', color: INK },
+        { text: '+', color: INK },
+        { text: 'product', color: INK, br: true },
+        { text: 'agency', color: DIM },
+        { text: 'for', color: DIM },
+        { text: 'the', color: DIM },
+        { text: 'future.', color: DIM },
+      ],
+      start: 2,
+      deleteAt: 40,
+      chrome: HeadlineCardChrome,
+      style: {
+        position: 'absolute',
+        left: 108,
+        top: 628,
+        fontFamily: resolveFont('Manrope'),
+        fontWeight: 500,
+        fontSize: 156,
+        lineHeight: 1.08,
+        letterSpacing: '-0.045em',
+        whiteSpace: 'nowrap',
+      },
+      camera: { push: 1.1, startAt: 0, origin: '30% 60%' },
+    },
+    {
+      id: 'stripes',
+      device: 'staggerPop',
+      hold: 45,
+      src: `${A}/1443.png`,
+      slices: [[32, 403], [404, 774], [775, 1145], [1146, 1516], [1517, 1888]],
+      top: 32,
+      bottom: 1046,
+      stagger: 3,
+      camera: { push: 1.08, startAt: 18 },
+    },
+    {
+      id: 'type',
+      device: 'specimen',
+      hold: 42,
+      rows: [
+        { label: 'Manrope', font: 'Manrope', size: 134, top: 236, rule: 400 },
+        { label: 'Inter', font: 'Inter', size: 134, top: 470, rule: 636 },
+        { label: 'GEIST MONO', font: 'GeistMono', size: 122, top: 712, rule: 872, letterSpacing: '0.02em' },
+      ],
+      ruleColor: '#000000',
+      camera: { push: 0.9, startAt: 20, origin: '60% 50%' },
+    },
+    {
+      id: 'statue',
+      device: 'kenBurns',
+      hold: 61,
+      in: { kind: 'blurReveal', from: 3.2, dur: 12, origin: '20% 39%' },
+      src: `${A}/1446.png`,
+      camera: { push: 1.06, startAt: 20, origin: '20% 39%' },
+    },
+    {
+      id: 'cta',
+      device: 'kenBurns',
+      hold: 62,
+      in: { kind: 'zoomEnter', from: 0.7, dur: 15 },
+      out: { kind: 'whip', to: 1.7, dur: 10 },
+      src: `${A}/1445.png`,
+      camera: { push: 1.04, startAt: 15 },
+    },
+    {
+      id: 'end',
+      device: 'lockup',
+      dark: true,
+      hold: 75,
+      out: { kind: 'fade', dur: 21 },
+      src: `${A}/01.png`,
+      slices: [[436, 581], [650, 800], [809, 1103], [1120, 1156], [1167, 1335], [1346, 1468]],
+      top: 472,
+      bottom: 606,
+      scale: 0.85,
+      camera: false,
+    },
+  ],
+};

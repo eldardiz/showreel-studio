@@ -1,0 +1,31 @@
+{
+  "name": "showreel-studio",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client showreel / brand reveal videos built from screenshots. Manifest-driven Remotion compositions with a reusable effects library.",
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion bundle",
+    "typecheck": "tsc --noEmit",
+    "compositions": "remotion compositions",
+    "qa:timeline": "tsx scripts/qa/timeline.ts",
+    "qa:proof": "bash scripts/qa/proof.sh",
+    "qa:cuts": "bash scripts/qa/cuts.sh",
+    "render:legacy:native": "remotion render NativeBrandRevealLegacy out/_legacy/native-brand-reveal-legacy.mp4",
+    "render:native-agency:mp4": "remotion render Showreel-native-agency out/native-agency/native-agency.mp4",
+    "render:native-agency:webm": "remotion render Showreel-native-agency out/native-agency/native-agency.webm --codec=vp9"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.462",
+    "@remotion/google-fonts": "4.0.462",
+    "@remotion/media-utils": "4.0.462",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.462"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.0"
+  }
+}
