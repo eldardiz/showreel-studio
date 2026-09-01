@@ -14,7 +14,9 @@
     "render:legacy:native": "remotion render NativeBrandRevealLegacy out/_legacy/native-brand-reveal-legacy.mp4",
     "render:native-agency:mp4": "remotion render Showreel-native-agency out/native-agency/native-agency.mp4",
     "render:native-agency:webm": "remotion render Showreel-native-agency out/native-agency/native-agency.webm --codec=vp9",
-    "render:demo-tall:mp4": "remotion render Showreel-demo-tall out/demo-tall/demo-tall.mp4"
+    "render:demo-tall:mp4": "remotion render Showreel-demo-tall out/demo-tall/demo-tall.mp4",
+    "render:sitesherpa:mp4": "remotion render Showreel-sitesherpa out/sitesherpa/sitesherpa.mp4",
+    "render:sitesherpa:webm": "remotion render Showreel-sitesherpa out/sitesherpa/sitesherpa.webm --codec=vp9"
   },
   "dependencies": {
     "@remotion/cli": "4.0.462",
