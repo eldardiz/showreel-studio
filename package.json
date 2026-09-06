@@ -19,7 +19,8 @@
     "render:sitesherpa:webm": "remotion render Showreel-sitesherpa out/sitesherpa/sitesherpa.webm --codec=vp9",
     "render:sitesherpa-cards:mp4": "remotion render Showreel-sitesherpa-card-light out/sitesherpa-cards/card-light.mp4 && remotion render Showreel-sitesherpa-card-dark out/sitesherpa-cards/card-dark.mp4",
     "render:sitesherpa-ai:mp4": "remotion render Showreel-sitesherpa-card-ai out/sitesherpa-cards/card-ai.mp4",
-    "render:sitesherpa-full-card:mp4": "remotion render Showreel-sitesherpa-card-full out/sitesherpa-cards/card-full.mp4"
+    "render:sitesherpa-full-card:mp4": "remotion render Showreel-sitesherpa-card-full out/sitesherpa-cards/card-full.mp4",
+    "render:sitesherpa-platform:mp4": "remotion render Showreel-sitesherpa-card-platform out/sitesherpa-cards/card-platform.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.462",

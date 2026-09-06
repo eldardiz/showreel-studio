@@ -1,5 +1,6 @@
 import type { Brand, EditManifest } from '../showreel/manifest';
 import { AiSection } from './sitesherpa-ai.custom';
+import { PlatformFlow } from './sitesherpa-platform.custom';
 
 // Two step-scroll clips that live INSIDE Eldar's Jitter showcase cards (1080x810 card, rendered 2x).
 // 114 frames = 3.8 s each: hold 27, glide 20, rest 20, glide 20, rest 27. Ends on a still.
@@ -65,6 +66,20 @@ export const siteSherpaCardAi: EditManifest = {
 };
 // platform diagram → productivity + stats → AI listens cards
 export const siteSherpaCardDark = card('sitesherpa-card-dark', [7128, 9350, 12220]);
+
+// platform diagram with pulses flowing through the connectors, seamless 4.8 s loop
+export const siteSherpaCardPlatform: EditManifest = {
+  id: 'sitesherpa-card-platform',
+  client: 'SiteSherpa (Zotyra)',
+  fps: 30,
+  width: 2160,
+  height: 1620,
+  brand,
+  preset: 'editorial',
+  slides: [
+    { id: 'platform', device: 'custom', component: PlatformFlow, hold: 144, dark: true, bg: '#004144', camera: false },
+  ],
+};
 
 // every section, top to bottom: 8 stations, same glide + crisp gate, ~10.5 s
 export const siteSherpaCardFull = card(
