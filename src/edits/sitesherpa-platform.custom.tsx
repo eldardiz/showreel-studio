@@ -60,43 +60,48 @@ const PATHS = [
   buildPath([HUB_R, pt(1680, 1330), pt(1680, 1718), pt(1750, 1718)]),
 ];
 
-const Dot: React.FC<{ x: number; y: number; o: number; r: number; color: string }> = ({ x, y, o, r, color }) => (
-  <div
-    style={{
-      position: 'absolute',
-      left: x - r,
-      top: y - r,
-      width: r * 2,
-      height: r * 2,
-      borderRadius: r,
-      background: `radial-gradient(circle, ${color} 0%, transparent 70%)`,
-      opacity: o,
-    }}
-  />
-);
+const pathD = (path: { pts: P[] }) =>
+  path.pts.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ');
+const PATH_DS = PATHS.map(pathD);
+const PATH_LENS = PATHS.map((p) => p.len[p.len.length - 1]);
 
 export const PlatformFlow: React.FC<SlideProps> = ({ frame, dur }) => {
   const f = ((frame % dur) + dur) % dur;
   return (
     <AbsoluteFill style={{ backgroundColor: '#004144' }}>
       <Img src={staticFile(`${A}/platform-base.png`)} style={{ position: 'absolute', left: 0, top: 0, width: 2160, height: 1620 }} />
-      {PATHS.map((p, i) =>
-        [0, 36].map((half) => {
-          const t = ((f + half + i * 14) % 72) / 72;
-          const fade = Math.min(1, Math.sin(Math.PI * t) * 1.6);
-          const [x, y] = posAt(p, t);
-          const trail = [0.045, 0.09, 0.14].map((d) => posAt(p, Math.max(0, t - d)));
+      {/* glow-flow: a soft white segment of the line itself travels through each vein */}
+      <svg width={2160} height={1620} style={{ position: 'absolute', left: 0, top: 0 }}>
+        <defs>
+          <filter id="glowWide" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="7" />
+          </filter>
+          <filter id="glowMid" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2" />
+          </filter>
+        </defs>
+        {PATHS.map((_, i) => {
+          const L = PATH_LENS[i];
+          const dash = Math.max(90, L * 0.32);
+          const cycle = dash + L;
+          const t = ((f + i * 14) % 72) / 72;
+          const offset = dash - cycle * t; // dash slides start → end, seamless per 72 f
+          const common = {
+            d: PATH_DS[i],
+            fill: 'none' as const,
+            strokeLinecap: 'round' as const,
+            strokeDasharray: `${dash} ${L + dash}`,
+            strokeDashoffset: offset,
+          };
           return (
-            <React.Fragment key={`${i}-${half}`}>
-              <Dot x={trail[2][0]} y={trail[2][1]} o={0.16 * fade} r={12} color="#eeb87f" />
-              <Dot x={trail[1][0]} y={trail[1][1]} o={0.3 * fade} r={11} color="#f0c290" />
-              <Dot x={trail[0][0]} y={trail[0][1]} o={0.5 * fade} r={10} color="#f6d3a8" />
-              <Dot x={x} y={y} o={0.95 * fade} r={9} color="#f9debb" />
-              <Dot x={x} y={y} o={fade} r={4.5} color="#fff7ea" />
-            </React.Fragment>
+            <g key={i}>
+              <path {...common} stroke="#eafffb" strokeWidth={11} opacity={0.28} filter="url(#glowWide)" />
+              <path {...common} stroke="#f2fffc" strokeWidth={5} opacity={0.75} filter="url(#glowMid)" />
+              <path {...common} stroke="#ffffff" strokeWidth={2.4} opacity={0.95} />
+            </g>
           );
-        }),
-      )}
+        })}
+      </svg>
     </AbsoluteFill>
   );
 };
