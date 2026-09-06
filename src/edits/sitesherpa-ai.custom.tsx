@@ -1,6 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, Img, staticFile } from 'remotion';
 import type { SlideProps } from '../showreel/manifest';
+import { EASINGS } from '../showreel/easing';
 
 // "AI that listens" section brought to life. Base = flat crop of the section
 // (source window: page.png y 12280..14440, x full, rendered at 0.75).
@@ -49,24 +50,40 @@ const Dot: React.FC<{ x: number; y: number; o: number; r: number; color: string 
   />
 );
 
-export const AiSection: React.FC<SlideProps> = ({ frame, dur }) => {
+const PITCH1 = 229; // slider slot distance (comp px); rest slots at x 73 / 302 (hidden) / 531
+const PHONE_W = 126;
+const PITCH3 = 104; // ticker row pitch
+const ROW_H = 88;
+const FOCUS_Y = 158; // where a row is fully active (matches the design's highlighted slot)
+const ROWS = [
+  { text: 'PPE non-compliance flagged near loading zone.', caption: 'Issue logged automatically.' },
+  { text: 'Guardrail missing on Level 2 scaffold.', caption: 'Detected moments ago.' },
+  { text: 'Machinery operating outside defined safe zone.', caption: 'Live monitoring alert.' },
+  { text: 'Hazard conditions changed due to weather.', caption: 'Issue logged automatically.' },
+];
+
+const mix = (a: string, b: string, t: number) => {
+  const pa = a.match(/\w\w/g)!.map((v) => parseInt(v, 16));
+  const pb = b.match(/\w\w/g)!.map((v) => parseInt(v, 16));
+  return `rgb(${pa.map((v, i) => Math.round(v + (pb[i] - v) * t)).join(',')})`;
+};
+
+export const AiSection: React.FC<SlideProps> = ({ frame, dur, font }) => {
+  const fontBody = font('body');
   const f = ((frame % dur) + dur) % dur;
 
-  // ---- card 1: marquee ----
-  const stripW = 822 * S;
-  const gap = 36;
-  const loopW = stripW + gap;
-  const off1 = (f / dur) * loopW;
+  // ---- card 1: stepped slider (dwell 24, glide 12, one slot per 36 f; 4 slots = seamless loop) ----
+  const stepK = Math.floor(f / 36);
+  const stepU = f - stepK * 36;
+  const glide = stepU < 24 ? 0 : EASINGS.native((stepU - 24) / 12);
+  const off1 = (stepK + glide) * PITCH1;
 
   // ---- card 2 ----
   const breathe = 1 + 0.03 * Math.sin((2 * Math.PI * f) / 48);
   const spin = (360 * (f % 48)) / 48;
 
-  // ---- card 3: ticker ----
-  const rowsH = 600 * S;
-  const gap3 = 30;
-  const loopH = rowsH + gap3;
-  const off3 = (f / dur) * loopH;
+  // ---- card 3: constant-speed ticker, one full 4-row cycle per loop ----
+  const off3 = (f / dur) * PITCH3 * ROWS.length;
 
   const mask = (x0: number, y0: number, x1: number, y1: number): React.CSSProperties => ({
     position: 'absolute',
@@ -81,15 +98,31 @@ export const AiSection: React.FC<SlideProps> = ({ frame, dur }) => {
     <AbsoluteFill style={{ backgroundColor: '#004144' }}>
       <Img src={staticFile(`${A}/base.png`)} style={{ position: 'absolute', left: 0, top: 0, width: 2160, height: 1620 }} />
 
-      {/* card 1: auto-looping carousel */}
+      {/* card 1: stepped slider; the deck glides one slot at a time behind the fixed active card */}
       <div style={{ ...mask(154, 960, 976, 1520), backgroundColor: CARD_BG }}>
-        {[0, 1, 2].map((k) => (
-          <Img
-            key={k}
-            src={staticFile(`${A}/strip1.png`)}
-            style={{ position: 'absolute', left: k * loopW - off1, top: 0, width: stripW, height: 560 * S }}
-          />
-        ))}
+        {[-2, -1, 0, 1, 2, 3, 4, 5].map((j) => {
+          const x = 531 + j * PITCH1 - off1;
+          if (x < -PHONE_W || x > 616.5 + PHONE_W) return null;
+          const flipped = ((j % 2) + 2) % 2 === 1;
+          return (
+            <Img
+              key={j}
+              src={staticFile(`${A}/phone-side.png`)}
+              style={{
+                position: 'absolute',
+                left: x - PHONE_W / 2,
+                top: 41,
+                width: PHONE_W,
+                height: 307.5,
+                transform: flipped ? 'scaleX(-1)' : undefined,
+              }}
+            />
+          );
+        })}
+        <Img
+          src={staticFile(`${A}/phone-active.png`)}
+          style={{ position: 'absolute', left: 180, top: 6, width: 253.5, height: 380.25 }}
+        />
       </div>
 
       {/* card 2: light pulses along the lines */}
@@ -142,17 +175,50 @@ export const AiSection: React.FC<SlideProps> = ({ frame, dur }) => {
         />
       </svg>
 
-      {/* card 3: infinite bottom-to-top ticker */}
-      <div style={{ ...mask(1956, 960, 2670, 1560), backgroundColor: CARD_BG }}>
-        {[0, 1, 2].map((k) => (
-          <Img
-            key={k}
-            src={staticFile(`${A}/rows.png`)}
-            style={{ position: 'absolute', left: 0, top: k * loopH - off3, width: 714 * S, height: rowsH }}
-          />
-        ))}
-        <div style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: 54, background: `linear-gradient(${CARD_BG}, transparent)` }} />
-        <div style={{ position: 'absolute', left: 0, bottom: 0, width: '100%', height: 54, background: `linear-gradient(transparent, ${CARD_BG})` }} />
+      {/* card 3: smooth ticker of rebuilt alert rows; the row passing the focus line lights up */}
+      <div style={{ ...mask(1956, 960, 2670, 1560), background: 'linear-gradient(#014948, #00403f)' }}>
+        {Array.from({ length: 10 }, (_, k) => k - 2).map((k) => {
+          const top = k * PITCH3 - off3 + 24;
+          if (top < -ROW_H || top > 450 + ROW_H) return null;
+          const row = ROWS[((k % ROWS.length) + ROWS.length) % ROWS.length];
+          const d = Math.abs(top + ROW_H / 2 - FOCUS_Y);
+          const t = Math.max(0, 1 - d / 90);
+          const w = t * t * (3 - 2 * t); // smoothstep
+          return (
+            <div
+              key={k}
+              style={{
+                position: 'absolute',
+                left: 0,
+                top,
+                width: '100%',
+                height: ROW_H,
+                borderRadius: 10,
+                backgroundColor: `rgba(0, 45, 42, ${0.12 + 0.78 * w})`,
+                padding: '16px 20px 0 33px',
+                boxSizing: 'border-box',
+              }}
+            >
+              <div
+                style={{
+                  fontFamily: fontBody,
+                  fontSize: 21,
+                  lineHeight: 1.2,
+                  color: mix('#5a9191', '#f2f6f5', w),
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {row.text}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 6, opacity: 0.5 + 0.5 * w }}>
+                <div style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: mix('#7da3a2', '#ebb164', w) }} />
+                <div style={{ fontFamily: fontBody, fontSize: 14, color: mix('#47807f', '#a9c4c2', w) }}>{row.caption}</div>
+              </div>
+            </div>
+          );
+        })}
+        <div style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: 48, background: 'linear-gradient(#014948, transparent)' }} />
+        <div style={{ position: 'absolute', left: 0, bottom: 0, width: '100%', height: 48, background: 'linear-gradient(transparent, #00403f)' }} />
       </div>
     </AbsoluteFill>
   );
