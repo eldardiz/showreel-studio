@@ -18,7 +18,7 @@ const brand: Brand = {
   fonts: { title: 'Manrope', body: 'Inter' },
 };
 
-const card = (id: string, steps: number[]): EditManifest => ({
+const card = (id: string, steps: number[], hold = 114): EditManifest => ({
   id,
   client: 'SiteSherpa (Zotyra)',
   fps: 30,
@@ -31,7 +31,7 @@ const card = (id: string, steps: number[]): EditManifest => ({
     {
       id: 'scroll',
       device: 'pageScroll',
-      hold: 114,
+      hold,
       src: `${A}/page.png`,
       srcWidth: 2880,
       srcHeight: 18578,
@@ -65,3 +65,10 @@ export const siteSherpaCardAi: EditManifest = {
 };
 // platform diagram → productivity + stats → AI listens cards
 export const siteSherpaCardDark = card('sitesherpa-card-dark', [7128, 9350, 12220]);
+
+// every section, top to bottom: 8 stations, same glide + crisp gate, ~10.5 s
+export const siteSherpaCardFull = card(
+  'sitesherpa-card-full',
+  [0, 2136, 4400, 7128, 9372, 12240, 14700, 16418],
+  314,
+);
