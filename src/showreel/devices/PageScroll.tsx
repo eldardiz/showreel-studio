@@ -34,8 +34,10 @@ export const PageScroll: React.FC<SlideProps<S>> = ({ frame, dur, slide, preset,
     steps = Array.from({ length: n }, (_, i) => Math.min(maxScroll, i * stepSrc));
   } else steps = slide.steps.map((s) => Math.min(maxScroll, s));
 
-  const moveE = ease(preset.ease.move);
+  const glide = slide.curve === 'glide';
+  const moveE = glide ? ease('glide') : ease(preset.ease.move);
   const settleE = ease('outCubic');
+  const mainShare = glide ? 0.97 : 0.94; // glide keeps almost all travel on the single curve
   const yAt = (f: number) => {
     let y = steps[0] ?? 0;
     for (let i = 1; i < steps.length; i++) {
@@ -43,7 +45,7 @@ export const PageScroll: React.FC<SlideProps<S>> = ({ frame, dur, slide, preset,
       const delta = steps[i] - steps[i - 1];
       const fast = ramp(f, t0, t0 + move, moveE);
       const drift = ramp(f, t0 + move, t0 + move + settle, settleE);
-      y += delta * 0.94 * fast + delta * 0.06 * drift;
+      y += delta * mainShare * fast + delta * (1 - mainShare) * drift;
     }
     return y;
   };

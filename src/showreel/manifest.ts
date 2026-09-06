@@ -170,6 +170,7 @@ export type Slide = SlideBase &
         viewportWidth?: number; // rendered width of the page (default 1600 at 1080p)
         steps: number[] | 'auto'; // scroll positions in source px; 'auto' = even steps
         stepDur?: { move: number; settle: number };
+        curve?: 'step' | 'glide'; // 'glide' = one continuous luxury curve, minimal drift split
         startAt?: number;
       }
     | {

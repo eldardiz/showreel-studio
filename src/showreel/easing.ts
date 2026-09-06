@@ -1,6 +1,6 @@
 import { Easing } from 'remotion';
 
-export type EasingName = 'native' | 'outCubic' | 'outExpo' | 'inQuad' | 'inOutCubic' | 'linear';
+export type EasingName = 'native' | 'outCubic' | 'outExpo' | 'inQuad' | 'inOutCubic' | 'glide' | 'linear';
 
 export const EASINGS: Record<EasingName, (t: number) => number> = {
   // native.agency's signature decel curve, also the reference edit's feel
@@ -9,6 +9,8 @@ export const EASINGS: Record<EasingName, (t: number) => number> = {
   outExpo: Easing.out(Easing.exp),
   inQuad: Easing.in(Easing.quad),
   inOutCubic: Easing.inOut(Easing.cubic),
+  // luxury scroll glide: gentle start, sustained middle, very long decel tail
+  glide: Easing.bezier(0.66, 0, 0.1, 1),
   linear: (t) => t,
 };
 

@@ -1,7 +1,7 @@
 import type { Brand, EditManifest } from '../showreel/manifest';
 
 // Two step-scroll clips that live INSIDE Eldar's Jitter showcase cards (1080x810 card, rendered 2x).
-// 84 frames = 2.8 s each: hold 18, move 11, settle 22, move 11, settle 22. Ends on a still.
+// 84 frames = 2.8 s each: hold 18, glide 20, settle 13, glide 20, settle 13. Ends on a still.
 // Source: the Sep 1 SiteSherpa page (2880x18578). Viewport shows 2160 source px per screen.
 const A = 'edits/sitesherpa';
 
@@ -24,8 +24,8 @@ const card = (id: string, steps: number[]): EditManifest => ({
   width: 2160,
   height: 1620,
   brand,
-  // blur scaled up for the 2x resolution
-  preset: { extends: 'editorial', blur: { maxPx: 28, gain: 60 } },
+  // blur scaled up for the 2x resolution; higher gain keeps the smear rich at glide speeds
+  preset: { extends: 'editorial', blur: { maxPx: 28, gain: 95 } },
   slides: [
     {
       id: 'scroll',
@@ -36,7 +36,8 @@ const card = (id: string, steps: number[]): EditManifest => ({
       srcHeight: 18578,
       frame: 'none',
       steps,
-      stepDur: { move: 11, settle: 22 },
+      stepDur: { move: 20, settle: 13 },
+      curve: 'glide',
       startAt: 18,
       dark: true,
       bg: '#004144',
