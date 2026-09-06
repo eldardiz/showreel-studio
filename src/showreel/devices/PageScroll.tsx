@@ -50,8 +50,11 @@ export const PageScroll: React.FC<SlideProps<S>> = ({ frame, dur, slide, preset,
     return y;
   };
   const vPx = Math.abs(yAt(frame + 1) - yAt(frame)) * scale;
-  const samples = vPx > 3 ? preset.blur.samples : 1;
-  const blur = vPx > 3 ? Math.min(preset.blur.maxPx, vPx * 0.35) : 0;
+  // crisp gate: below this speed the frame renders fully sharp, so blur only
+  // exists mid-flight and a composed section is never smeared
+  const CRISP_PX = 6;
+  const samples = vPx > CRISP_PX ? preset.blur.samples : 1;
+  const blur = vPx > CRISP_PX ? Math.min(preset.blur.maxPx, (vPx - CRISP_PX) * 0.35) : 0;
 
   const page = (f: number) => (
     <Img
