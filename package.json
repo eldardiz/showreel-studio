@@ -16,7 +16,8 @@
     "render:native-agency:webm": "remotion render Showreel-native-agency out/native-agency/native-agency.webm --codec=vp9",
     "render:demo-tall:mp4": "remotion render Showreel-demo-tall out/demo-tall/demo-tall.mp4",
     "render:sitesherpa:mp4": "remotion render Showreel-sitesherpa out/sitesherpa/sitesherpa.mp4",
-    "render:sitesherpa:webm": "remotion render Showreel-sitesherpa out/sitesherpa/sitesherpa.webm --codec=vp9"
+    "render:sitesherpa:webm": "remotion render Showreel-sitesherpa out/sitesherpa/sitesherpa.webm --codec=vp9",
+    "render:sitesherpa-cards:mp4": "remotion render Showreel-sitesherpa-card-light out/sitesherpa-cards/card-light.mp4 && remotion render Showreel-sitesherpa-card-dark out/sitesherpa-cards/card-dark.mp4"
   },
   "dependencies": {
     "@remotion/cli": "4.0.462",

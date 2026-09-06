@@ -233,8 +233,8 @@ export type EditManifest = {
   id: string;
   client: string;
   fps: 30;
-  width: 1920;
-  height: 1080;
+  width: number;
+  height: number;
   brand: Brand;
   preset: PresetName | ({ extends: PresetName } & DeepPartial<MotionPreset>);
   audio?: AudioConfig;
