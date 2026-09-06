@@ -1,4 +1,5 @@
 import type { Brand, EditManifest } from '../showreel/manifest';
+import { AiSection } from './sitesherpa-ai.custom';
 
 // Two step-scroll clips that live INSIDE Eldar's Jitter showcase cards (1080x810 card, rendered 2x).
 // 114 frames = 3.8 s each: hold 27, glide 20, rest 20, glide 20, rest 27. Ends on a still.
@@ -48,5 +49,19 @@ const card = (id: string, steps: number[]): EditManifest => ({
 
 // hero → industries grid → banner + compliance cards
 export const siteSherpaCardLight = card('sitesherpa-card-light', [0, 2136, 4650]);
+
+// "AI that listens" section held centered, three live layers, seamless 4.8 s loop
+export const siteSherpaCardAi: EditManifest = {
+  id: 'sitesherpa-card-ai',
+  client: 'SiteSherpa (Zotyra)',
+  fps: 30,
+  width: 2160,
+  height: 1620,
+  brand,
+  preset: 'editorial',
+  slides: [
+    { id: 'ai', device: 'custom', component: AiSection, hold: 144, dark: true, bg: '#004144', camera: false },
+  ],
+};
 // platform diagram → productivity + stats → AI listens cards
 export const siteSherpaCardDark = card('sitesherpa-card-dark', [7128, 9350, 12220]);
