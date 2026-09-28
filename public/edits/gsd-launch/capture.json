@@ -1,0 +1,9 @@
+{"base":"https://get-stuff-digital-wine.vercel.app","viewport":[1080,1350],"dpr":2,"out":"public/edits/gsd-launch/clips","cookieReject":"Reject",
+ "jobs":[
+  {"name":"home-hero","path":"/","seconds":11},
+  {"name":"seo-hero","path":"/seo","seconds":10},
+  {"name":"ai-hero","path":"/ai-search","seconds":10},
+  {"name":"auth-hero","path":"/authority-building","seconds":10},
+  {"name":"dev-hero","path":"/development","seconds":10},
+  {"name":"home-scroll","path":"/","seconds":16,"scroll":{"start":2,"end":15,"to":"bottom"}}
+ ]}

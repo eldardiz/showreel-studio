@@ -2,6 +2,7 @@ import type { EditManifest } from '../showreel/manifest';
 import { nativeAgency } from './native-agency';
 import { demoTall } from './demo-tall';
 import { siteSherpa } from './sitesherpa';
+import { gsdLaunch, gsdLaunchServices } from './gsd-launch';
 import { siteSherpaCardAi, siteSherpaCardDark, siteSherpaCardFull, siteSherpaCardLight, siteSherpaCardPlatform } from './sitesherpa-cards';
 
 /** Registry of client edits. Add a manifest here and Root.tsx registers `Showreel-<id>`. */
@@ -14,4 +15,6 @@ export const EDITS: Record<string, EditManifest> = {
   [siteSherpaCardAi.id]: siteSherpaCardAi,
   [siteSherpaCardFull.id]: siteSherpaCardFull,
   [siteSherpaCardPlatform.id]: siteSherpaCardPlatform,
+  [gsdLaunch.id]: gsdLaunch,
+  ...Object.fromEntries(gsdLaunchServices.map((m) => [m.id, m])),
 };
