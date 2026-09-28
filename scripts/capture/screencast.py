@@ -25,7 +25,7 @@ async def record(ctx, base, job, out_dir, vw, vh, dpr):
         asyncio.ensure_future(cdp.send("Page.screencastFrameAck", {"sessionId": ev["sessionId"]}))
 
     cdp.on("Page.screencastFrame", on_frame)
-    await cdp.send("Page.startScreencast", {"format": "jpeg", "quality": 92, "maxWidth": vw * dpr, "maxHeight": vh * dpr, "everyNthFrame": 1})
+    await cdp.send("Page.startScreencast", {"format": "jpeg", "quality": 92, "maxWidth": round(vw * dpr), "maxHeight": round(vh * dpr), "everyNthFrame": 1})
     t0 = asyncio.get_event_loop().time()
     await page.goto(base + job["path"], wait_until="domcontentloaded")
     sc = job.get("scroll")
@@ -65,7 +65,7 @@ async def record(ctx, base, job, out_dir, vw, vh, dpr):
             fh.write(frames[k][1])
     out = os.path.join(out_dir, f"{job['name']}.mp4")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-framerate", str(FPS), "-i", os.path.join(tmp, "f%05d.jpg"),
-                    "-vf", f"scale={vw * dpr}:{vh * dpr}:flags=lanczos,format=yuv420p", "-c:v", "libx264", "-crf", "16",
+                    "-vf", f"scale={round(vw * dpr)}:{round(vh * dpr)}:flags=lanczos,format=yuv420p", "-c:v", "libx264", "-crf", "16",
                     "-preset", "slow", "-movflags", "+faststart", out], check=True)
     shutil.rmtree(tmp)
     return {"name": job["name"], "frames": len(frames), "out": out}
